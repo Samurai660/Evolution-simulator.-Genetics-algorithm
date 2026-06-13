@@ -1,0 +1,13 @@
+﻿# Visual Studio
+.vs/
+*.slnx
+*.pyproj
+__pycache__/
+*.pyc
+*.pyo
+#Временные файлы
+*.tmp
+*.log
+#Папки с билдом
+bin/
+obj/
