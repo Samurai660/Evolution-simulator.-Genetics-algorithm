@@ -12,7 +12,7 @@ class EvolutionSimulation:
         self.generation = 1
 
         #пустой список для группы ботов
-        self.agent = []
+        self.agents = []
 
         #заполним его новыми агентами
         for i in range(population_size):

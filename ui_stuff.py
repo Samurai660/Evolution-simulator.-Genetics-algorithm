@@ -2,10 +2,17 @@ import customtkinter as ctk
 import tkinter as tk 
 
 class UiStaff:
-    def __init__(self, window, width, height, on_star_click):
-        #левая панель для управления 
-        self.panel = ctk.CTkFrame (window, width = 200, height = 580)
-        self.panel.pack (side = "left", padx = 10, fill = "y")
+    def __init__(self, window, width, height, start_callback, settings_callback):
+        self.window = window
+        self.width = width
+        self.height = height
+        #сохраняем колбэки для доступа внутри класса
+        self.start_callback = start_callback
+        self.settings_callback = settings_callback
+
+        #левая паенль для управления
+        self.panel = ctk.CTkFrame(window, width=200, height=580)
+        self.panel.pack(side="left", padx=10, fill="y")
 
         #текстовый номер поколения 
         self.label_gen = ctk.CTkLabel (self.panel, text = "Generation: 1", font = ("Times New Roman", 20, "bold"))

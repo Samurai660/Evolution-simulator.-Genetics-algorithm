@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from simulation import EvolutionSimulation
-from ui_layout import UiLayout
+from ui_stuff import UiStaff
+import ui_stuff
 
 class EvolutionApp:
     def __init__(self):
@@ -31,7 +32,7 @@ class EvolutionApp:
         self.window.resizable(False, False)
 
         #инициализируем графику
-        self.ui = UiLayout (self.window, self.width, self.height, self.start_button_clicked, self.apply_settings_clicked)
+        self.ui = UiStaff (self.window, self.width, self.height, self.start_button_clicked, self.apply_settings_clicked)
         
         # Отрисовываем первый стартовый кадр
         self.redraw_screen()
