@@ -33,7 +33,7 @@ class EvolutionSimulation:
 
         #сортировка агентов. Нужно, чтобы самые успешные были в начале 
         #сортировка для переборки списка и замена местами 
-        self.agents.sort (key = lambda x: success, reverse = True)
+        self.agents.sort (key = lambda x: x.success, reverse = True)
 
         #отбираем 5 лучших агентов (родители следующего поколения)
         parents = self.agents [:5]
