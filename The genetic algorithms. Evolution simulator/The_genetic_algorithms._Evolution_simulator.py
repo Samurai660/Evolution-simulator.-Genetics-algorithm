@@ -51,7 +51,7 @@ class EvolutionApp:
         #точки агенты: фиолетовые - живые, серые - нет
         for agent in self.sim.agents:
             if agent.is_alive:
-                colot = "violet"
+                color = "violet"
             else:
                 color = "grey"
             self.ui.canvas.create_oval(agent.x - 4, agent.y - 4, agent.x + 4, agent.y + 4, fill = color, outline = "")

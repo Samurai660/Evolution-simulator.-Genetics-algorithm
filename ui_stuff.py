@@ -21,11 +21,11 @@ class UiStaff:
         #кнопка старт/пауза
         self.btn_start = ctk.CTkButton (self.panel, text = "Start", 
                                         font = ("Arial", 16), fg_color = "green",
-                                        command = on_star_click)
+                                        command = self.start_callback)
 
         self.btn_start.pack (pady = 10, padx = 20, fill = "x")
 
         #создаем canvas для отрисовки точек
 
-        self.canvas = tk.Canvas(window, width = width, height = heigth, bg = "1e1e1e", highlightthickness = 0)
+        self.canvas = tk.Canvas(window, width = width, height = height, bg = "#1e1e1e", highlightthickness = 0)
         self.canvas.pack (side = "right", padx = 10, pady = 10)
