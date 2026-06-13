@@ -1,4 +1,3 @@
-import dis
 import random
 
 class Agent:
