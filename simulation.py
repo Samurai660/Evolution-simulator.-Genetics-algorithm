@@ -39,7 +39,7 @@ class EvolutionSimulation:
         self.agents.sort (key = lambda x: x.success, reverse = True)
 
         #отбираем 5 лучших агентов (родители следующего поколения)
-        parents = self.agents [:3]
+        parents = self.agents [:5]
         #новый список для следующего поколения
         new_agents = []
 

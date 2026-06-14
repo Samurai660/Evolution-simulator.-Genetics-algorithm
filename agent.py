@@ -5,7 +5,7 @@ class Agent:
         #флаг стартовой позиции
         self.start_x = start_x
         self.start_y = start_y
-
+        
         #текущие координты, меняющиеся при передвижении
         self.x = start_x
         self.y = start_y
@@ -15,6 +15,7 @@ class Agent:
         self.success = 0.0
         self.is_alive = True
         self.collided = False
+        self.prev_distance = None
 
         #создаем пустой список для генома 
         self.genome = []
@@ -30,6 +31,7 @@ class Agent:
         self.y = self.start_y
         self.is_alive = True
         self.collided = False
+        self.prev_distance = None
 
     def move(self, step_index, max_width, max_height):
     #делаем один шаг по команде из генома 
@@ -56,17 +58,21 @@ class Agent:
     #флаг если выход за границы экрана - смерть
         if self.x < 0 or self.x > max_width or self.y < 0 or self.y > max_height:
             self.is_alive = False
+            self.collided = True 
 
-    def count_success (self, target_x, target_y):
-    #расстояние до финиша
+    def count_success(self, target_x, target_y):
         distance = ((target_x - self.x) ** 2 + (target_y - self.y) ** 2) ** 0.5
 
-    #проверка для идеального прохода агента
-        if distance == 0:
-            self.success = 10000.0
-        else:
-        #чем меньше расстояние, тем больше число успеха
-            self.success = 1.0 / (distance + 1) #избегать деления на ноль 
+    #базовая награда (чем ближе — тем лучше)
+        self.success = -distance
 
+    #прогресс между шагами (ВОТ ЭТО ГЛАВНОЕ ДОБАВЛЕНИЕ)
+        if self.prev_distance is not None:
+            self.success += (self.prev_distance - distance) * 5
+
+    #штраф за столкновение со стеной
         if self.collided:
-            self.success *= 0.05
+            self.success -= 50
+
+    #сохраняем состояние для следующего шага
+        self.prev_distance = distance
