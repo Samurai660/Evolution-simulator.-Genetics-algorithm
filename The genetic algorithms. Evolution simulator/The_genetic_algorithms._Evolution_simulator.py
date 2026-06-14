@@ -1,9 +1,8 @@
-from gettext import find
+from tracemalloc import start
 
 import customtkinter as ctk
 from simulation import EvolutionSimulation
 from ui_stuff import UiStaff
-import ui_stuff
 from wavemethod import find_wave_way
 
 class EvolutionApp:
@@ -22,6 +21,9 @@ class EvolutionApp:
         # Переменные настроек
         self.pop_size = 50
         self.mutation_rate = 0.10
+        self.record_fitness = 0
+        #показывать ли путь волны
+        self.show_path = True
 
         # Инициализируем логику толпы ботов
         self.sim = EvolutionSimulation (population_size=self.pop_size, start_x=self.start_x, start_y=self.start_y, target_x = self.target_x, target_y = self.target_y)
@@ -35,7 +37,9 @@ class EvolutionApp:
         self.window.resizable(False, False)
 
         #инициализируем графику
-        self.ui = UiStaff (self.window, self.width, self.height, self.start_button_clicked, self.apply_settings_clicked)
+        self.ui = UiStaff (self.window, self.width, self.height, start_callback = self.start_button_clicked,
+                           settings_callback = self.apply_settings_clicked, restart_callback = self.restart_callback,
+                           exit_callback = self.window.destroy, show_path_callback = self.toggle_path_clicked)
         
         #вызов волного метода один раз при старте приложения
         self.ideal_path = find_wave_way ((self.start_x, self.start_y), (self.target_x, self.target_y), self.width, self.height, self.obstacle)
@@ -52,6 +56,7 @@ class EvolutionApp:
                 px, py = point
                 #рисуем маленькую точку
                 self.ui.canvas.create_oval (px - 2, py - 2, px + 2, py + 2, fill = "#009e8e", outline = "")
+
         # Старт и Финиш
         self.ui.canvas.create_oval (self.target_x - 15, self.target_y - 15, self.target_x + 15, self.target_y + 15, fill = "green", outline = "")
         self.ui.canvas.create_oval (self.start_x - 10, self.start_y - 10, self.start_x + 10, self.start_y + 10, fill = "blue", outline = "")
@@ -67,8 +72,15 @@ class EvolutionApp:
                 color = "grey"
             self.ui.canvas.create_oval(agent.x - 4, agent.y - 4, agent.x + 4, agent.y + 4, fill = color, outline = "")
 
+        #обновление инфо панели 
+        alive_count = sum( 1 for a in self.sim.agents if a.is_alive )
+        best = self.sim.agents[0].success
+
+        self.ui.update_info(self.sim.generation, best, self.record_fitness, 
+                            alive_count, self.pop_size, self.is_running)
+
     def update_simulation_loop(self):
-        #логика шаков, обновление таймера 
+        #логика шагов, обновление таймера 
         if not self.is_running:
             return
 
@@ -80,6 +92,7 @@ class EvolutionApp:
             if agent.is_alive:
                 if self.obstacle[0] <= agent.x <= self.obstacle[2] and self.obstacle[1] <= agent.y <= self.obstacle[3]:
                     agent.is_alive = False
+                    agent.collided = True
 
         #обновление графики
         self.redraw_screen()
@@ -93,11 +106,14 @@ class EvolutionApp:
                 self.window.after_cancel(self.after_id)
 
                 self.current_step = 0
-
                 self.sim.make_new_generation (self.target_x, self.target_y, mutation_rate = self.mutation_rate)
 
-                self.ui.label_gen.configure (text = "Generation: " + str (self.sim.generation))
+                #обновление рекорда 
+                best = self.sim.agents[0].success
+                if best > self.record_fitness:
+                    self.record_fitness = best
 
+                self.ui.set_btn_start_text("Start", "white")
                 self.is_running = True
 
         if self.is_running:
@@ -107,17 +123,44 @@ class EvolutionApp:
         #клик на start/stop
         if not self.is_running:
             self.is_running = True
-            self.ui.btn_start.configure(text = "Stop", fg_color = "red")
+            self.ui.btn_start_text(text = "Stop", fg_color = "red")
             self.update_simulation_loop()
         else:
             self.is_running = False
-            self.ui.btn_start.configure(text = "Start", fg_color = "green")
+            self.ui.btn_start_text(text = "Start", fg_color = "green")
 
             if hasattr (self, 'after_if'):
                 self.window.after_cancel (self.after_id)
+    
+    #реализация перезапуска
+    def restart_clicked(self):
+        #полный сброс симуляции
+        self.if_running = False
+        self.current_step = 0
+        self.record_fitness = 0
+
+        if hasattr (self, "after_id"):
+            self.window.after_cancel (self.after_id)
+
+        self.sim = EvolutionSimulation (population_size = self.pop_size, start_x = self.start_x,
+                                       start_y = self.start_y, target_x = self.target_x , target_y = self.target_y)
+        self.ui.set_btn_start_text ("Start", "green")
+        self.redraw_screen()
+    
+    #включение/выключение волнового метода 
+    def toggle_path_clicked(self):
+        self.show_path = not self.show_path
+
+        if self.show_path:
+            self.ui.btn_show_path.configure (text = "Hide path")
+        else:
+            self.ui.btn_show_path.configure (text = "Show path")
+        self.redraw_screen()
+    
+    #применение настроек и запуск
     def apply_settings_clicked(self):
         
-        self.ui.label_error.configure(text="")
+        self.ui.label_error.configure(text = "")
         
         try:
             # Парсим популяцию
@@ -136,12 +179,7 @@ class EvolutionApp:
             self.pop_size = new_pop
             self.mutation_rate = new_mut
             
-            self.is_running = False
-            self.ui.btn_start.configure (text= "Start", fg_color = "green")
-            self.current_step = 0
-            self.sim = EvolutionSimulation (population_size=self.pop_size, start_x=self.start_x, start_y=self.start_y, target_x = self.target_x, target_y = self.target_y)
-            self.ui.label_gen.configure(text = "Generation: 1")
-            self.redraw_screen()
+            self.restart_clicked()
             
             self.ui.label_error.configure(text= "Settings apply", text_color = "#2ecc71")
 
