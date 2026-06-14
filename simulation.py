@@ -36,7 +36,7 @@ class EvolutionSimulation:
             self.make_new_generation(self.target_x, self.target_y)
             self.step_index = 0
 
-    def make_new_generation(self, target_x, target_y, mutation_rate = 0.15):
+    def make_new_generation(self, target_x, target_y, mutation_rate = 0.05):
         #оценка старого покаления и создание нового, более продвинутого
         
         #пусть каждый агент сам считает свой успех
@@ -48,7 +48,7 @@ class EvolutionSimulation:
         self.agents.sort (key = lambda x: x.success, reverse = True)
 
         #отбираем 5 лучших агентов (родители следующего поколения)
-        parents = self.agents [:5]
+        parents = self.agents [:3]
         #новый список для следующего поколения
         new_agents = []
 

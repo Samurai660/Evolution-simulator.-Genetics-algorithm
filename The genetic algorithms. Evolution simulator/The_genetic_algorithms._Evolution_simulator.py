@@ -86,11 +86,14 @@ class EvolutionApp:
         self.current_step += 1
         
         #как достигаем 300 шагов, то естественный отбор
-        if self.current_step >= 300:
-            self.sim.make_new_generation(self.target_x, self.target_y, mutation_rate=self.mutation_rate)
+        if self.current_step >= 600:
+            self.is_running = False
             self.current_step = 0
+            self.sim.make_new_generation(self.target_x, self.target_y, mutation_rate=self.mutation_rate)
             self.ui.label_gen.configure (text = "Generation: " + str(self.sim.generation))
-        
+            
+            #заново пуск симуляции
+            self.is_running = True
         #обновление таймера каждые 20 сек
         self.window.after(20, self.update_simulation_loop)
 
@@ -128,7 +131,7 @@ class EvolutionApp:
             self.is_running = False
             self.ui.btn_start.configure (text= "Start", fg_color = "green")
             self.current_step = 0
-            self.sim = EvolutionSimulation (population_size=self.pop_size, start_x=self.start_x, start_y=self.start_y)
+            self.sim = EvolutionSimulation (population_size=self.pop_size, start_x=self.start_x, start_y=self.start_y, target_x = self.target_x, target_y = self.target_y)
             self.ui.label_gen.configure(text = "Generation: 1")
             self.redraw_screen()
             
