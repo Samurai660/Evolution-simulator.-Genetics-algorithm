@@ -1,5 +1,6 @@
 import unittest
 from agent import Agent
+from wavemethod import find_wave_way
 
 class TestEvolution(unittest.TestCase):
     def test_agent_initialization(self):

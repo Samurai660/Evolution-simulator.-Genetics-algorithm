@@ -1,7 +1,10 @@
+from gettext import find
+
 import customtkinter as ctk
 from simulation import EvolutionSimulation
 from ui_stuff import UiStaff
 import ui_stuff
+from wavemethod import find_wave_way
 
 class EvolutionApp:
     def __init__(self):
@@ -34,6 +37,8 @@ class EvolutionApp:
         #инициализируем графику
         self.ui = UiStaff (self.window, self.width, self.height, self.start_button_clicked, self.apply_settings_clicked)
         
+        #вызов волного метода один раз при старте приложения
+        self.ideal_path = find_wave_way ((self.start_x, self.start_y), (self.target_x, self.target_y), self.width, self.height, self.obstacle)
         # Отрисовываем первый стартовый кадр
         self.redraw_screen()
 
@@ -41,6 +46,12 @@ class EvolutionApp:
         #отрсовка объектов на экране
         self.ui.canvas.delete("all")
         
+        #если путь найдем, то рисуем его 
+        if self.ideal_path:
+            for point in self.ideal_path:
+                px, py = point
+                #рисуем маленькую точку
+                self.ui.canvas.create_oval (px - 2, py - 2, px + 2, py + 2, fill = "#009e8e", outline = "")
         # Старт и Финиш
         self.ui.canvas.create_oval (self.target_x - 15, self.target_y - 15, self.target_x + 15, self.target_y + 15, fill = "green", outline = "")
         self.ui.canvas.create_oval (self.start_x - 10, self.start_y - 10, self.start_x + 10, self.start_y + 10, fill = "blue", outline = "")

@@ -36,7 +36,7 @@ class EvolutionSimulation:
             self.make_new_generation(self.target_x, self.target_y)
             self.step_index = 0
 
-    def make_new_generation(self, target_x, target_y, mutation_rate = 0.05):
+    def make_new_generation(self, target_x, target_y, mutation_rate = 0.15):
         #оценка старого покаления и создание нового, более продвинутого
         
         #пусть каждый агент сам считает свой успех
