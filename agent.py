@@ -1,7 +1,7 @@
 import random
 
 class Agent:
-    def __init__(self, start_x, start_y, genome_size = 600):
+    def __init__(self, start_x, start_y, genome_size = 1500):
         #флаг стартовой позиции
         self.start_x = start_x
         self.start_y = start_y
@@ -14,6 +14,7 @@ class Agent:
 
         self.success = 0.0
         self.is_alive = True
+        self.collided = False
 
         #создаем пустой список для генома 
         self.genome = []
@@ -28,6 +29,7 @@ class Agent:
         self.x = self.start_x
         self.y = self.start_y
         self.is_alive = True
+        self.collided = False
 
     def move(self, step_index, max_width, max_height):
     #делаем один шаг по команде из генома 
@@ -64,4 +66,7 @@ class Agent:
             self.success = 10000.0
         else:
         #чем меньше расстояние, тем больше число успеха
-            self.success = 1.0 / distance
+            self.success = 1.0 / (distance + 1) #избегать деления на ноль 
+
+        if self.collided:
+            self.success *= 0.05

@@ -85,7 +85,7 @@ class EvolutionApp:
         self.redraw_screen()
         self.current_step += 1
         
-        if self.current_step >= 600:
+        if self.current_step >= 1500:
             self.is_running = False
         
         #как достигаем 600 шагов, то естественный отбор
