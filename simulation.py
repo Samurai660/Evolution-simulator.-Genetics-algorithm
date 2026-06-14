@@ -85,8 +85,6 @@ class EvolutionSimulation:
         #замена предыдущего поколения на новое 
         self.agents = new_agents
 
-        #увеличиваем номер поколения +1
-        self.generation = self.generation + 1
 
     
 
