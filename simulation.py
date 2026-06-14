@@ -20,9 +20,13 @@ class EvolutionSimulation:
             self.agents.append(new_bot)
 
     def update (self, step_index, max_width, max_height):
+        #добавление счетчика ходов
+        if not hasattr(self, "step_index"):
+            self.step_index = 0
         #продвижение каждого агента в толпе на один шаг 
         for bot in self.agents:
             bot.move(step_index, max_width, max_height)
+        self.step_index += 1
 
     def make_new_generation(self, target_x, target_y, mutation_rate = 0.05):
         #оценка старого покаления и создание нового, более продвинутого
@@ -39,6 +43,13 @@ class EvolutionSimulation:
         parents = self.agents [:5]
         #новый список для следующего поколения
         new_agents = []
+
+        self.generation += 1
+        #нужно обязательно, чтобы новое поколение начинало ходить с 0 шага
+        self.step_index = 0
+        #reset для нового агента
+        for agent in self.agents:
+            agent.reset()
 
         #Заполение сипска потомством до 50 
         while len(new_agents) < self.population_size:
