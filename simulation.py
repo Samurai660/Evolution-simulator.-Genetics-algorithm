@@ -22,21 +22,12 @@ class EvolutionSimulation:
             self.agents.append(new_bot)
 
     def update (self, step_index, max_width, max_height):
-        #добавление счетчика ходов
-        if not hasattr(self, "step_index"):
-            self.step_index = 0
         #продвижение каждого агента в толпе на один шаг 
         for bot in self.agents:
             bot.move(step_index, max_width, max_height)
-        self.step_index += 1
-        #ключевой момент. Смерть агента
-        all_dead = all (not agent.is_alive for agent in self.agents)
-        #кроме смерти у них еще могут закончится ходы 
-        if all_dead or self.step_index >= 300:
-            self.make_new_generation(self.target_x, self.target_y)
-            self.step_index = 0
+        
 
-    def make_new_generation(self, target_x, target_y, mutation_rate = 0.05):
+    def make_new_generation(self, target_x, target_y, mutation_rate = 0.10):
         #оценка старого покаления и создание нового, более продвинутого
         
         #пусть каждый агент сам считает свой успех

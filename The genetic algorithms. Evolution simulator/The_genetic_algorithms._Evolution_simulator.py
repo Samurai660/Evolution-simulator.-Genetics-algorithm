@@ -21,7 +21,7 @@ class EvolutionApp:
 
         # Переменные настроек
         self.pop_size = 50
-        self.mutation_rate = 0.05
+        self.mutation_rate = 0.10
 
         # Инициализируем логику толпы ботов
         self.sim = EvolutionSimulation (population_size=self.pop_size, start_x=self.start_x, start_y=self.start_y, target_x = self.target_x, target_y = self.target_y)
@@ -85,17 +85,23 @@ class EvolutionApp:
         self.redraw_screen()
         self.current_step += 1
         
-        #как достигаем 300 шагов, то естественный отбор
         if self.current_step >= 600:
             self.is_running = False
-            self.current_step = 0
-            self.sim.make_new_generation(self.target_x, self.target_y, mutation_rate=self.mutation_rate)
-            self.ui.label_gen.configure (text = "Generation: " + str(self.sim.generation))
-            
-            #заново пуск симуляции
-            self.is_running = True
-        #обновление таймера каждые 20 сек
-        self.window.after(20, self.update_simulation_loop)
+        
+        #как достигаем 600 шагов, то естественный отбор
+            if hasattr (self, "after_id"):
+                self.window.after_cancel(self.after_id)
+
+                self.current_step = 0
+
+                self.sim.make_new_generation (self.target_x, self.target_y, mutation_rate = self.mutation_rate)
+
+                self.ui.label_gen.configure (text = "Generation: " + str (self.sim.generation))
+
+                self.is_running = True
+
+        if self.is_running:
+            self.after_id = self.window.after (20, self.update_simulation_loop)
 
     def start_button_clicked(self):
         #клик на start/stop
@@ -107,6 +113,8 @@ class EvolutionApp:
             self.is_running = False
             self.ui.btn_start.configure(text = "Start", fg_color = "green")
 
+            if hasattr (self, 'after_if'):
+                self.window.after_cancel (self.after_id)
     def apply_settings_clicked(self):
         
         self.ui.label_error.configure(text="")

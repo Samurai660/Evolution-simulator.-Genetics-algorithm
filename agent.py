@@ -1,7 +1,7 @@
 import random
 
 class Agent:
-    def __init__(self, start_x, start_y, genome_size = 300):
+    def __init__(self, start_x, start_y, genome_size = 600):
         #флаг стартовой позиции
         self.start_x = start_x
         self.start_y = start_y
@@ -61,7 +61,7 @@ class Agent:
 
     #проверка для идеального прохода агента
         if distance == 0:
-            self.success == 10000.0
+            self.success = 10000.0
         else:
         #чем меньше расстояние, тем больше число успеха
             self.success = 1.0 / distance
