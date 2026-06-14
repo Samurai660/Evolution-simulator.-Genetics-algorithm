@@ -3,7 +3,9 @@ import random
 from agent import Agent 
 
 class EvolutionSimulation:
-    def __init__ (self, population_size, start_x, start_y):
+    def __init__ (self, population_size, start_x, start_y, target_x, target_y):
+        self.target_x = target_x
+        self.target_y = target_y
         self.population_size = population_size
         self.start_x = start_x
         self.start_y = start_y
@@ -27,13 +29,19 @@ class EvolutionSimulation:
         for bot in self.agents:
             bot.move(step_index, max_width, max_height)
         self.step_index += 1
+        #ключевой момент. Смерть агента
+        all_dead = all (not agent.is_alive for agent in self.agents)
+        #кроме смерти у них еще могут закончится ходы 
+        if all_dead or self.step_index >= 300:
+            self.make_new_generation(self.target_x, self.target_y)
+            self.step_index = 0
 
     def make_new_generation(self, target_x, target_y, mutation_rate = 0.05):
         #оценка старого покаления и создание нового, более продвинутого
         
         #пусть каждый агент сам считает свой успех
         for bot in self.agents:
-            bot.calculate_success(target_x, target_y)
+            bot.count_success(target_x, target_y)
 
         #сортировка агентов. Нужно, чтобы самые успешные были в начале 
         #сортировка для переборки списка и замена местами 
@@ -58,7 +66,7 @@ class EvolutionSimulation:
             m_agent = random.choice(parents)
 
             #создаем приемника 
-            child = Agnet (self.start_x, self.start_y)
+            child = Agent (self.start_x, self.start_y)
 
             #скрещиваем гены (половина от p_agent, половина от m_agent)
             seprator = len(child.genome) // 2
@@ -69,7 +77,7 @@ class EvolutionSimulation:
             for i in range (len(child.genome)):
                 random_percent = random.random()
                 if random_percent < mutation_rate:
-                    child.genome[i] = random = random.randint(0, 3)
+                    child.genome[i] = random.randint(0, 3)
 
                 #добавляем потомка в новое поколение
             new_agents.append(child)
@@ -79,5 +87,7 @@ class EvolutionSimulation:
 
         #увеличиваем номер поколения +1
         self.generation = self.generation + 1
+
+    
 
         

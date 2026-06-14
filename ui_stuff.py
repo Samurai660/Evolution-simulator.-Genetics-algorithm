@@ -28,4 +28,5 @@ class UiStaff:
         #создаем canvas для отрисовки точек
 
         self.canvas = tk.Canvas(window, width = width, height = height, bg = "#1e1e1e", highlightthickness = 0)
+        self.canvas = tk.Canvas(window, width = width, height = height, bg = "#1e1e1e", highlightthickness = 0)
         self.canvas.pack (side = "right", padx = 10, pady = 10)

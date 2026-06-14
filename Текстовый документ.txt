@@ -1,0 +1,37 @@
+def make_new_generation(self, target_x, target_y, mutation_rate = 0.05):
+        # 1. Считаем успех
+        for bot in self.agents:
+            bot.calculate_success(target_x, target_y)
+
+        # 2. Сортируем
+        self.agents.sort(key=lambda x: x.success, reverse=True)
+
+        # 3. Отбираем элиту
+        parents = self.agents[:5]
+        new_agents = []
+
+        # 4. Создаем потомство
+        while len(new_agents) < self.population_size:
+            p_agent = random.choice(parents)
+            m_agent = random.choice(parents)
+
+            # Создаем ребенка (убедись, что класс называется Agent)
+            child = Agent(self.start_x, self.start_y)
+
+            # Скрещивание
+            separator = len(child.genome) // 2
+            child.genome = p_agent.genome[:separator] + m_agent.genome[separator:]
+
+            # Мутация
+            for i in range(len(child.genome)):
+                if random.random() < mutation_rate:
+                    child.genome[i] = random.randint(0, 3)
+
+            new_agents.append(child)
+
+        # 5. Заменяем старых на новых
+        self.agents = new_agents
+
+        # 6. Обновляем счетчики
+        self.generation += 1
+        self.step_index = 0

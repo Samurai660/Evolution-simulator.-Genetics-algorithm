@@ -23,45 +23,45 @@ class Agent:
             random_step = random.randint(0,3) # 0 - вверх, 1 - вправо, 2 - вниз, 3 - влево
             self.genome.append(random_step)
 
-def reset(self):
+    def reset(self):
     #возращаем агента на старт перед новым поколением 
-    self.x = self.start_x
-    self.y = self.start_y
-    self.is_alive = True
+        self.x = self.start_x
+        self.y = self.start_y
+        self.is_alive = True
 
-def move(self, step_index, max_width, max_height):
+    def move(self, step_index, max_width, max_height):
     #делаем один шаг по команде из генома 
-    if self.is_alive == False:
-        return
+        if self.is_alive == False:
+            return
 
     #защита при условии кончившихся шагов
-    if step_index >= len(self.genome):
-        return
+        if step_index >= len(self.genome):
+            return
     #берем команду под нужным номером 
-    command = self.genome[step_index]
-    step_size = 5 #сколько пикселей за шаг проходится
+        command = self.genome[step_index]
+        step_size = 5 #сколько пикселей за шаг проходится
 
     #двигаем точку в зависимости от команды
-    if command == 0:
-        self.y = self.y - step_size
-    elif command == 1:
-        self.x = self.x + step_size
-    elif command == 2:
-        self.y = self.y + step_size
-    elif command == 3:
-        self.x = self.x - step_size
+        if command == 0:
+            self.y = self.y - step_size
+        elif command == 1:
+            self.x = self.x + step_size
+        elif command == 2:
+            self.y = self.y + step_size
+        elif command == 3:
+            self.x = self.x - step_size
 
     #флаг если выход за границы экрана - смерть
-    if self.x < 0 or self.x > max_width or self.y < 0 or self.y > max_height:
-        self.is_alive = False
+        if self.x < 0 or self.x > max_width or self.y < 0 or self.y > max_height:
+            self.is_alive = False
 
-def count_success (self, target_x, targe_y):
+    def count_success (self, target_x, target_y):
     #расстояние до финиша
-    distance = ((target_x - self.x) ** 2 + (targe_y - self.y) ** 2) ** 0.5
+        distance = ((target_x - self.x) ** 2 + (target_y - self.y) ** 2) ** 0.5
 
     #проверка для идеального прохода агента
-    if distance == 0:
-        self.success == 10000.0
-    else:
+        if distance == 0:
+            self.success == 10000.0
+        else:
         #чем меньше расстояние, тем больше число успеха
-        self.success = 1.0 / distance
+            self.success = 1.0 / distance

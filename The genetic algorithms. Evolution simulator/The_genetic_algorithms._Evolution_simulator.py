@@ -21,7 +21,7 @@ class EvolutionApp:
         self.mutation_rate = 0.05
 
         # Инициализируем логику толпы ботов
-        self.sim = EvolutionSimulation (population_size=self.pop_size, start_x=self.start_x, start_y=self.start_y)
+        self.sim = EvolutionSimulation (population_size=self.pop_size, start_x=self.start_x, start_y=self.start_y, target_x = self.target_x, target_y = self.target_y)
         self.current_step = 0
         self.is_running = False
 
