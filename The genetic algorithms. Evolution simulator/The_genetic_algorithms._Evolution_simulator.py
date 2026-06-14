@@ -1,5 +1,3 @@
-from tracemalloc import start
-
 import customtkinter as ctk
 from simulation import EvolutionSimulation
 from ui_stuff import UiStaff
@@ -135,7 +133,7 @@ class EvolutionApp:
     #реализация перезапуска
     def restart_clicked(self):
         #полный сброс симуляции
-        self.if_running = False
+        self.is_running = False
         self.current_step = 0
         self.record_fitness = 0
 
