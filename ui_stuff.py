@@ -27,12 +27,12 @@ class UiStaff:
         self.btn_start.pack (pady = 10, padx = 20, fill = "x")
 
         # кнопка рестарта
-        self.btn_restart = ctk.CTkButton (self.panel, text = "Restart [R]", font = ("Arial", 14), fg_color = "#555555", command = self.restart_callback)
-        self.btn_start.pack (pady = 10, padx = 20, fill = "x")
+        self.btn_restart = ctk.CTkButton (self.panel, text = "Restart [R]", font = ("Arial", 14), fg_color = "#795038", command = self.restart_callback)
+        self.btn_restart.pack (pady = 10, padx = 20, fill = "x")
 
         #кнопка показать путь волновым алгоритмом 
-        self.btn_show_path = ctk.CTkButton (self.panel, text = "Show path [E]", font = ("Arial", 14), fg_color = "#1a6fa3", command = self.show_path_callback)
-        self.btn_start.pack (pady = 10, padx = 20, fill = "x")
+        self.btn_show_path = ctk.CTkButton (self.panel, text = "Show path", font = ("Arial", 14), fg_color = "#1a6fa3", command = self.show_path_callback)
+        self.btn_show_path.pack (pady = 10, padx = 20, fill = "x")
 
         #информационная панель снизу
         self.info_frame = ctk.CTkFrame(self.panel, fg_color="#2a2a2a", corner_radius=8)
@@ -58,13 +58,13 @@ class UiStaff:
         self.window.bind ("<space>", lambda e: self.start_callback())
         self.window.bind ("<r>", lambda e: self.restart_callback())
         self.window.bind ("<R>", lambda e: self.restart_callback())
-        self.window.bind ("<Escape>", lambda e: self.restart_callback())
+        self.window.bind ("<Escape>", lambda e: self.window.destroy())
 
         #обновление информационной панели, вызов из the genetic
     def update_info (self, generation, best_fitness, record_fitness, alive, total, running):
 
          self.label_gen.configure(text =f"Generation: {generation}")
-         self.label_best.configure(text = f"Best fitness: {round(best_fitness, 1)}")
+         self.label_best.configure(text = f"Closenness: {round(best_fitness, 1)}")
          self.label_record.configure(text = f"Record fitness: {round(record_fitness, 1)}")
          self.label_alive.configure(text = f"Alive agents: {alive}/{total}")
 

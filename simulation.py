@@ -1,5 +1,4 @@
 import random 
-#переносим нашего агента из файла agent
 from agent import Agent 
 
 class EvolutionSimulation:
@@ -27,7 +26,7 @@ class EvolutionSimulation:
             bot.move(step_index, max_width, max_height)
         
 
-    def make_new_generation(self, target_x, target_y, mutation_rate = 0.10):
+    def make_new_generation(self, target_x, target_y, mutation_rate):
         #оценка старого покаления и создание нового, более продвинутого
         
         #пусть каждый агент сам считает свой успех
@@ -50,7 +49,7 @@ class EvolutionSimulation:
         for agent in self.agents:
             agent.reset()
 
-        #Заполение сипска потомством до 50 
+        #Заполение сипска потомством до n числа
         while len(new_agents) < self.population_size:
             #выбираем двух случайных из лучших 
             p_agent = random.choice(parents)

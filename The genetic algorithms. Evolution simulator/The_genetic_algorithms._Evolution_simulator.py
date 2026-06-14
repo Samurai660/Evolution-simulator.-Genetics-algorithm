@@ -17,9 +17,9 @@ class EvolutionApp:
         self.obstacle = (200, 280, 600, 320)
 
         # Переменные настроек
-        self.pop_size = 50
-        self.mutation_rate = 0.10
-        self.record_fitness = 0
+        self.pop_size = 100
+        self.mutation_rate = 0.15
+        self.record_fitness = -999999
         #показывать ли путь волны
         self.show_path = True
 
@@ -49,7 +49,7 @@ class EvolutionApp:
         self.ui.canvas.delete("all")
         
         #если путь найдем, то рисуем его 
-        if self.ideal_path:
+        if self.ideal_path and self.show_path:
             for point in self.ideal_path:
                 px, py = point
                 #рисуем маленькую точку
@@ -71,8 +71,8 @@ class EvolutionApp:
             self.ui.canvas.create_oval(agent.x - 4, agent.y - 4, agent.x + 4, agent.y + 4, fill = color, outline = "")
 
         #обновление инфо панели 
-        alive_count = sum( 1 for a in self.sim.agents if a.is_alive )
-        best = self.sim.agents[0].success
+        alive_count = sum( 1 for a in self.sim.agents if a.is_alive)
+        best = max(agent.success for agent in self.sim.agents)
 
         self.ui.update_info(self.sim.generation, best, self.record_fitness, 
                             alive_count, self.pop_size, self.is_running)
@@ -84,6 +84,10 @@ class EvolutionApp:
 
         #движение агентов 
         self.sim.update(self.current_step, self.width, self.height)
+
+        #считаем каждый успех кадр для инф панели
+        for agent in self.sim.agents:
+            agent.count_success(self.target_x, self.target_y)
         
         #проверка на столкновение 
         for agent in self.sim.agents:
@@ -107,7 +111,7 @@ class EvolutionApp:
                 self.sim.make_new_generation (self.target_x, self.target_y, mutation_rate = self.mutation_rate)
 
                 #обновление рекорда 
-                best = self.sim.agents[0].success
+                best = max(agent.success for agent in self.sim.agents)
                 if best > self.record_fitness:
                     self.record_fitness = best
 
@@ -129,6 +133,7 @@ class EvolutionApp:
 
             if hasattr (self, 'after_if'):
                 self.window.after_cancel (self.after_id)
+            self.redraw_screen()
     
     #реализация перезапуска
     def restart_clicked(self):
