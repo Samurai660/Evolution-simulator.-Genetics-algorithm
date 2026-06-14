@@ -36,7 +36,7 @@ class EvolutionApp:
 
         #инициализируем графику
         self.ui = UiStaff (self.window, self.width, self.height, start_callback = self.start_button_clicked,
-                           settings_callback = self.apply_settings_clicked, restart_callback = self.restart_callback,
+                           settings_callback = self.apply_settings_clicked, restart_callback = self.restart_clicked,
                            exit_callback = self.window.destroy, show_path_callback = self.toggle_path_clicked)
         
         #вызов волного метода один раз при старте приложения
@@ -111,7 +111,7 @@ class EvolutionApp:
                 if best > self.record_fitness:
                     self.record_fitness = best
 
-                self.ui.set_btn_start_text("Start", "white")
+                self.ui.set_btn_start_text("Start", "green")
                 self.is_running = True
 
         if self.is_running:
@@ -121,11 +121,11 @@ class EvolutionApp:
         #клик на start/stop
         if not self.is_running:
             self.is_running = True
-            self.ui.btn_start_text(text = "Stop", fg_color = "red")
+            self.ui.set_btn_start_text("Stop", "red")
             self.update_simulation_loop()
         else:
             self.is_running = False
-            self.ui.btn_start_text(text = "Start", fg_color = "green")
+            self.ui.set_btn_start_text("Start", "green")
 
             if hasattr (self, 'after_if'):
                 self.window.after_cancel (self.after_id)

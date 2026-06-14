@@ -61,20 +61,20 @@ class UiStaff:
         self.window.bind ("<Escape>", lambda e: self.restart_callback())
 
         #обновление информационной панели, вызов из the genetic
-        def update_info (self, generation, best_fitness, record_fitness, alive, total, running):
+    def update_info (self, generation, best_fitness, record_fitness, alive, total, running):
 
-            self.label_gen.configure(text =f"Generation: {generation}")
-            self.label_best.configure(text = f"Best fitness: {round(best_fitness, 1)}")
-            self.label_record.configure(text = f"Record fitness: {round(record_fitness, 1)}")
-            self.label_alive.configure(text = f"Alive agents: {alive}/{total}")
+         self.label_gen.configure(text =f"Generation: {generation}")
+         self.label_best.configure(text = f"Best fitness: {round(best_fitness, 1)}")
+         self.label_record.configure(text = f"Record fitness: {round(record_fitness, 1)}")
+         self.label_alive.configure(text = f"Alive agents: {alive}/{total}")
 
-            if running:
-                status = "Running"
-            else:
-                status = "Stopped"
+         if running:
+             status = "Running"
+         else:
+             status = "Stopped"
 
-            self.label_status.configure(text = f"Status: {status}")
+         self.label_status.configure(text = f"Status: {status}")
 
         #смена текста кнопки старт/стоп 
-        def set_btn_start_text(self, text, color):
-            self.btn_start.configure(text = text, fg_color = color)
+    def set_btn_start_text(self, text, color):
+         self.btn_start.configure(text = text, fg_color = color)
