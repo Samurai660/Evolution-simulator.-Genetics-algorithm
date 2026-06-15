@@ -95,6 +95,11 @@ class EvolutionApp:
                 if self.obstacle[0] <= agent.x <= self.obstacle[2] and self.obstacle[1] <= agent.y <= self.obstacle[3]:
                     agent.is_alive = False
                     agent.collided = True
+        #проверка на достижение цели
+        for agent in self.sim.agents:
+            if agent.is_alive:
+                if abs(agent.x - self.target_x) < 15 and abs(agent.y - self.target_y) < 15:
+                    agent.is_alive = False
 
         #обновление графики
         self.redraw_screen()
@@ -112,7 +117,7 @@ class EvolutionApp:
 
                 #обновление рекорда 
                 best = max(agent.success for agent in self.sim.agents)
-                if best > self.record_fitness:
+                if best > self.record_fitness and best != 0:
                     self.record_fitness = best
 
                 self.ui.set_btn_start_text("Start", "green")

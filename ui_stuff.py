@@ -64,9 +64,13 @@ class UiStaff:
     def update_info (self, generation, best_fitness, record_fitness, alive, total, running):
 
          self.label_gen.configure(text =f"Generation: {generation}")
-         self.label_best.configure(text = f"Closenness: {round(best_fitness, 1)}")
+         self.label_best.configure(text=f"Closeness: {round(best_fitness, 1)}")
          self.label_record.configure(text = f"Record fitness: {round(record_fitness, 1)}")
          self.label_alive.configure(text = f"Alive agents: {alive}/{total}")
+         if record_fitness == -999999:
+            self.label_record.configure(text="Record fitness: —")
+         else:
+            self.label_record.configure(text=f"Record fitness: {round(record_fitness, 1)}")
 
          if running:
              status = "Running"
