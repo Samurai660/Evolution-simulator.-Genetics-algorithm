@@ -41,8 +41,6 @@ class UiStaff:
         self.label_best = ctk.CTkLabel(self.info_frame, text="Best fitness: 0", font=("Arial", 12), anchor="w")
         self.label_best.pack(padx=10, pady=2, fill="x")
 
-        self.label_record = ctk.CTkLabel(self.info_frame, text="Record fitness: 0", font=("Arial", 12), anchor="w")
-        self.label_record.pack(padx=10, pady=2, fill="x")
 
         self.label_alive = ctk.CTkLabel(self.info_frame, text="Alive agents: 0/0", font=("Arial", 12), anchor="w")
         self.label_alive.pack(padx=10, pady=2, fill="x")
@@ -61,16 +59,12 @@ class UiStaff:
         self.window.bind ("<Escape>", lambda e: self.window.destroy())
 
         #обновление информационной панели, вызов из the genetic
-    def update_info (self, generation, best_fitness, record_fitness, alive, total, running):
+    def update_info (self, generation, best_fitness, alive, total, running):
 
          self.label_gen.configure(text =f"Generation: {generation}")
          self.label_best.configure(text=f"Closeness: {round(best_fitness, 1)}")
-         self.label_record.configure(text = f"Record fitness: {round(record_fitness, 1)}")
          self.label_alive.configure(text = f"Alive agents: {alive}/{total}")
-         if record_fitness == -999999:
-            self.label_record.configure(text="Record fitness: —")
-         else:
-            self.label_record.configure(text=f"Record fitness: {round(record_fitness, 1)}")
+         
 
          if running:
              status = "Running"

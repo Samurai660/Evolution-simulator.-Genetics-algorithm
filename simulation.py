@@ -75,7 +75,14 @@ class EvolutionSimulation:
         #замена предыдущего поколения на новое 
         self.agents = new_agents
 
+    #условия для завершения всего алгоритма. более 50% доходят до финиша живыми
+    def check_half_percent (self, target_x, target_y):
+        reached = 0
+        for bot in self.agents:
+            if bot.reached_target:
+                reached += 1
 
-    
+        #если больше половины добралось, то это успех 
+        return reached >= self.population_size * 0.5
 
         

@@ -19,7 +19,6 @@ class EvolutionApp:
         # Переменные настроек
         self.pop_size = 100
         self.mutation_rate = 0.15
-        self.record_fitness = -999999
         #показывать ли путь волны
         self.show_path = True
 
@@ -74,8 +73,7 @@ class EvolutionApp:
         alive_count = sum( 1 for a in self.sim.agents if a.is_alive)
         best = max(agent.success for agent in self.sim.agents)
 
-        self.ui.update_info(self.sim.generation, best, self.record_fitness, 
-                            alive_count, self.pop_size, self.is_running)
+        self.ui.update_info(self.sim.generation, best, alive_count, self.pop_size, self.is_running)
 
     def update_simulation_loop(self):
         #логика шагов, обновление таймера 
@@ -88,40 +86,39 @@ class EvolutionApp:
         #считаем каждый успех кадр для инф панели
         for agent in self.sim.agents:
             agent.count_success(self.target_x, self.target_y)
-        
-        #проверка на столкновение 
+        #проверка на столкновение со стеной 
         for agent in self.sim.agents:
             if agent.is_alive:
                 if self.obstacle[0] <= agent.x <= self.obstacle[2] and self.obstacle[1] <= agent.y <= self.obstacle[3]:
                     agent.is_alive = False
                     agent.collided = True
+
         #проверка на достижение цели
         for agent in self.sim.agents:
             if agent.is_alive:
                 if abs(agent.x - self.target_x) < 15 and abs(agent.y - self.target_y) < 15:
                     agent.is_alive = False
+                    agent.reached_target = True
+
+        #проверка на достижение более 50% агентов до финиша. в таких условиях алгоритм победил 
+        if self.sim.check_half_percent(self.target_x, self.target_y):
+            self.is_running = False
+            self.ui.set_btn_start_text("Start", "green")
+            return
 
         #обновление графики
         self.redraw_screen()
         self.current_step += 1
         
         if self.current_step >= 1500:
-            self.is_running = False
-        
         #как достигаем 600 шагов, то естественный отбор
             if hasattr (self, "after_id"):
                 self.window.after_cancel(self.after_id)
 
-                self.current_step = 0
-                self.sim.make_new_generation (self.target_x, self.target_y, mutation_rate = self.mutation_rate)
+            self.current_step = 0
+            self.sim.make_new_generation (self.target_x, self.target_y, mutation_rate = self.mutation_rate)
 
-                #обновление рекорда 
-                best = max(agent.success for agent in self.sim.agents)
-                if best > self.record_fitness and best != 0:
-                    self.record_fitness = best
-
-                self.ui.set_btn_start_text("Start", "green")
-                self.is_running = True
+            self.is_running = True
 
         if self.is_running:
             self.after_id = self.window.after (20, self.update_simulation_loop)
@@ -136,7 +133,7 @@ class EvolutionApp:
             self.is_running = False
             self.ui.set_btn_start_text("Start", "green")
 
-            if hasattr (self, 'after_if'):
+            if hasattr (self, 'after_id'):
                 self.window.after_cancel (self.after_id)
             self.redraw_screen()
     
@@ -145,7 +142,6 @@ class EvolutionApp:
         #полный сброс симуляции
         self.is_running = False
         self.current_step = 0
-        self.record_fitness = 0
 
         if hasattr (self, "after_id"):
             self.window.after_cancel (self.after_id)

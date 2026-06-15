@@ -16,6 +16,7 @@ class Agent:
         self.is_alive = True
         self.collided = False
         self.prev_distance = None
+        self.reached_target = False
 
         #создаем пустой список для генома 
         self.genome = []
@@ -32,6 +33,7 @@ class Agent:
         self.is_alive = True
         self.collided = False
         self.prev_distance = None
+        self.reached_target = False
 
     def move(self, step_index, max_width, max_height):
     #делаем один шаг по команде из генома 

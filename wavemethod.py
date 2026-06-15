@@ -1,4 +1,3 @@
-import queue
 from tkinter import CURRENT
 
 
